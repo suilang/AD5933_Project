@@ -366,21 +366,21 @@ float Scale_imp (u8 *SValue,u8 *IValue,u8 *NValue,u8 *CValue)
             Write_Byte(AddrTemp,NValue[i]);
             AddrTemp++;
         }
-    }
+				}
+		
+        //初始化控制寄存器，1011 0001 0000 0000待机模式，2V，一倍放大，内部时钟
+        AddrTemp=0X80;
+        for(i = 0;i <2;i++)
+        {
+            Write_Byte(AddrTemp,Mode|(AD5933_Standby>>8));
+            AddrTemp++;
+            Write_Byte(AddrTemp,CValue[1]);
+            AddrTemp++;
+        }
 
-    //初始化控制寄存器，1011 0001 0000 0000待机模式，2V，一倍放大，内部时钟
-    AddrTemp=0X80;
-    for(i = 0; i <2; i++)
-    {
-        Write_Byte(AddrTemp,Mode|(AD5933_Standby>>8));
-        AddrTemp++;
-        Write_Byte(AddrTemp,CValue[1]);
-        AddrTemp++;
-    }
-
-    Write_Byte(0x80,Mode|(AD5933_SYS_Init>>8));//控制寄存器写入初始化频率扫描命令
-    delay_ms(10);
-
+        Write_Byte(0x80,Mode|(AD5933_SYS_Init>>8));//控制寄存器写入初始化频率扫描命令
+        delay_ms(10);
+    
 
     Write_Byte(0X80,Mode|(AD5933_Begin_Fre_Scan>>8));//控制寄存器写入开始频率扫描命令
     while(1)
